@@ -1,4 +1,4 @@
-package com.gwnbs.proyek8;
+package id.telkomuniversity.tubes;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.gwnbs.proyek8.R;
 
 import java.util.ArrayList;
 

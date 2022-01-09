@@ -1,4 +1,4 @@
-package com.gwnbs.proyek8;
+package id.telkomuniversity.tubes;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -30,6 +30,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.gwnbs.proyek8.R;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getLayoutInflater().getContext(), default_notification_channel_id);
-        builder.setContentTitle("Pengingat");
+        builder.setContentTitle("Reminder");
         builder.setContentText(content);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
@@ -98,12 +99,12 @@ public class MainActivity extends AppCompatActivity {
         if (insertData) {
             try {
                 populateListView();
-                toastMsg("Tugas di tambahkan");
+                toastMsg("Tugas ditambahkan");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else
-            toastMsg("Opps.. terjadi kesalahan saat menyimpan!");
+            toastMsg("Terjadi kesalahan saat menyimpan");
     }
 
     //Mengambil seluruh data dari database ke listview
@@ -161,13 +162,14 @@ public class MainActivity extends AppCompatActivity {
         final EditText judul = dialogView.findViewById(R.id.edit_title);
         final TextView tanggal = dialogView.findViewById(R.id.date);
         final TextView waktu = dialogView.findViewById(R.id.time);
+        final TextView tempat = dialogView.findViewById(R.id.place);
 
         final long date = System.currentTimeMillis();
         SimpleDateFormat dateSdf = new SimpleDateFormat("d MMMM");
         String dateString = dateSdf.format(date);
         tanggal.setText(dateString);
 
-        SimpleDateFormat timeSdf = new SimpleDateFormat("hh : mm a");
+        SimpleDateFormat timeSdf = new SimpleDateFormat("HH : mm");
         String timeString = timeSdf.format(date);
         waktu.setText(timeString);
 
@@ -206,13 +208,14 @@ public class MainActivity extends AppCompatActivity {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 String time;
                                 @SuppressLint("DefaultLocale") String minTime = String.format("%02d", minute);
+                                time = hourOfDay + " : " + minTime;
                                 if (hourOfDay >= 0 && hourOfDay < 12) {
-                                    time = hourOfDay + " : " + minTime + " AM";
+                                    time = hourOfDay + " : " + minTime;
                                 } else {
                                     if (hourOfDay != 12) {
                                         hourOfDay = hourOfDay - 12;
                                     }
-                                    time = hourOfDay + " : " + minTime + " PM";
+                                    time = hourOfDay + " : " + minTime;
                                 }
                                 waktu.setText(time);
                                 cal.set(Calendar.HOUR, hourOfDay);
@@ -220,8 +223,16 @@ public class MainActivity extends AppCompatActivity {
                                 cal.set(Calendar.SECOND, 0);
                                 Log.d(TAG, "onTimeSet: Time has been set successfully");
                             }
-                        }, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), false);
+                        }, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), true);
                 timePickerDialog.show();
+            }
+        });
+
+        tempat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent x = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(x);
             }
         });
 
@@ -239,11 +250,11 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
-                    toastMsg("Oops, Gak bisa kosong tugas nya.");
+                    toastMsg("Nama tugas tidak boleh kosong");
                 }
             }
         });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialogBuilder.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.cancel();
             }

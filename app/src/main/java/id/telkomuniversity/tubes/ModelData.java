@@ -1,4 +1,4 @@
-package com.gwnbs.proyek8;
+package id.telkomuniversity.tubes;
 
 public class ModelData {
 
